@@ -2,15 +2,21 @@ import { useState, useEffect } from 'react'
 import './App.css'
 import { marked } from 'marked';
 import markedCodePreview from 'marked-code-preview';
-
-
+interface EditorProps {
+  value: string;
+  sendEvent: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+}
+interface PreviewerProps {
+  markdown: string;
+}
 marked.setOptions({
   gfm: true, // Enable GitHub flavored markdown
   breaks: true, // Enable line breaks in markdown
 });
 
 
-function Editor({value,sendEvent}){
+function Editor({value,sendEvent}:EditorProps){
+  
   return(
     <div className='editor'>
       <h2>Editor</h2>
@@ -19,9 +25,9 @@ function Editor({value,sendEvent}){
   )
 }
 
-function Previewer({markdown}){
+function Previewer({markdown}: PreviewerProps){
 
-  let m = marked.use(markedCodePreview).parse(markdown);        
+  let m = marked.use(markedCodePreview()).parse(markdown);        
   // marked.parse(markdown,{gfm: true, breaks:true});
   console.log(m)
   return(
@@ -80,7 +86,7 @@ function anotherExample(firstLine, lastLine) {
     setMarkdownText(markdown)
   }, [])
 
-  const changeMarkdown = (event) =>{
+  const changeMarkdown = (event: React.ChangeEvent<HTMLTextAreaElement>): void =>{
       setMarkdownText(event.target.value);
   }
   return (
